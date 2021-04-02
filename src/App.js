@@ -1,25 +1,54 @@
-import logo from './logo.svg';
-import './App.css';
+import React, { Component } from "react";
+import Header from "./Components/Layout/Header";
+import Footer from "./Components/Layout/Footer";
+import { withRouter } from "react-router-dom";
+import MenuLeft from "./Components/Layout/MenuLeft";
+import { AppContext } from "./AppContext";
 
-function App() {
-  return (
-    <div className="App">
-      <header className="App-header">
-        <img src={logo} className="App-logo" alt="logo" />
-        <p>
-          Edit <code>src/App.js</code> and save to reload.
-        </p>
-        <a
-          className="App-link"
-          href="https://reactjs.org"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          Learn React
-        </a>
-      </header>
-    </div>
-  );
+class App extends Component {
+  constructor(props) {
+    super(props);
+    this.state = {
+      getQty: 0,
+      length: 0,
+    };
+
+    // const [getQty, setgetQty] = useState(0);
+
+    this.getlengthCart = this.getlengthCart.bind(this);
+  }
+  getlengthCart(length) {
+    this.setState({
+      length: length,
+    });
+  }
+  render() {
+    let pathname = this.props.location.pathname;
+    return (
+      <AppContext.Provider
+        value={{
+          state: this.state,
+          getlengthCart: this.getlengthCart,
+        }}
+      >
+        <Header />,
+        <section>
+          <div className="container">
+            <div className="row">
+              {pathname.includes("account") || pathname.includes("cart") ? (
+                ""
+              ) : (
+                <MenuLeft />
+              )}
+
+              {this.props.children}
+            </div>
+          </div>
+        </section>
+        <Footer />
+      </AppContext.Provider>
+    );
+  }
 }
 
-export default App;
+export default withRouter(App);
